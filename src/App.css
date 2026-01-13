@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------- */
+/*             Terminal Scrollbar Styling               */
+/* ---------------------------------------------------- */
+
+/* For Firefox */
+.xterm .xterm-viewport {
+    background-color: transparent !important;
+    scrollbar-color: #bd00ff transparent;
+    /* Thumb Track */
+    scrollbar-width: thin;
+}
+
+/* For Webkit (Chrome, Safari, Edge) */
+.xterm-viewport::-webkit-scrollbar {
+    width: 6px;
+    /* Sleek and thin */
+    height: 6px;
+}
+
+.xterm-viewport::-webkit-scrollbar-track {
+    background: transparent;
+    /* Keep it clean */
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #bd00ff 0%, #7e22ce 100%);
+    /* Purple gradient */
+    border-radius: 99px;
+    /* Pill shape */
+    box-shadow: 0 0 10px rgba(189, 0, 255, 0.4);
+    /* Neon glow */
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    /* Subtle separation */
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background: #d946ef;
+    /* Brighter purple on hover */
+    box-shadow: 0 0 15px rgba(189, 0, 255, 0.8);
+}
+
+.xterm-viewport::-webkit-scrollbar-corner {
+    background: transparent;
+}
