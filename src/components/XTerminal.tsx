@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import { io, Socket } from "socket.io-client";
 import "xterm/css/xterm.css";
 import { Resizable } from "re-resizable";
+import { useSocket } from '../context/SocketContext';
 
 const TERMINAL_THEME = {
     background: "#00000000", // Transparent for glass effect
@@ -16,11 +16,11 @@ const TERMINAL_THEME = {
 export default function TerminalComponent() {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const terminalRef = useRef<Terminal | null>(null);
-    const socketRef = useRef<Socket | null>(null);
+    const { socket } = useSocket();
     const fitAddonRef = useRef<FitAddon | null>(null);
 
     useEffect(() => {
-        if (!containerRef.current) return;
+        if (!containerRef.current || !socket) return;
 
         // 1. Create terminal
         const terminal = new Terminal({
@@ -45,13 +45,11 @@ export default function TerminalComponent() {
         // Initial fit
         setTimeout(() => fitAddon.fit(), 50);
 
-        // 4. Connect socket
-        const socket = io("http://localhost:9000");
-
         // 5. Server → Terminal
-        socket.on("terminal:data", (data: string) => {
+        const onTerminalData = (data: string) => {
             terminal.write(data);
-        });
+        };
+        socket.on("terminal:data", onTerminalData);
 
         // 6. Terminal → Server
         terminal.onData((data) => {
@@ -60,14 +58,13 @@ export default function TerminalComponent() {
 
         // Save refs
         terminalRef.current = terminal;
-        socketRef.current = socket;
 
         // 7. Cleanup
         return () => {
-            socket.disconnect();
+            socket.off("terminal:data", onTerminalData);
             terminal.dispose();
         };
-    }, []);
+    }, [socket]);
 
     // Handle resize with throttling for smoothness
     const resizeTimeoutRef = useRef<number | null>(null);

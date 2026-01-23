@@ -1,50 +1,41 @@
-import http from "http";                               // HTTP server
-import express from "express";                         // Express framework
-import { Server as SocketServer } from "socket.io";    // Socket.IO server
-import pty from "node-pty";                            // PTY module for shell emulation
+import http from "http";
+import express from "express";
+import { Server as SocketServer } from "socket.io";
+import { Terminal } from "./terminal.js";
+import { FileExplorer } from "./fileexplorer.js";
+import {watchDirectory} from "./watcher.js";
+import dotenv from "dotenv";
+dotenv.config();
 
+const app = express();
 
-// Spawn a bash terminal process (PTY)
-const ptyProcess = pty.spawn("bash", [], {
-    name: "xterm-color",                               // Terminal type
-    cols: 80,                                          // Default columns
-    rows: 30,                                          // Default rows
-    cwd: process.env.INIT_CWD,                         // Working directory
-    env: process.env                                  // Inherit environment variables
+const server = http.createServer(app);
+
+const io = new SocketServer(server, {
+  cors: "*"
 });
+const projectname="Lynx"// it is now hardcoded for instance
+const projectDir=process.env.projectDir+"/"+projectname;
+console.log(projectDir)
 
+// terminal 
+Terminal(io);
 
-const app = express();                                 // Create Express application instance
-
-const server = http.createServer(app);                 // Bind Express to an HTTP server
-
-const io = new SocketServer(server, {                  // Create Socket.IO server
-    cors: "*"                                          // Allow all origins (development convenience)
-});
-
-
-// PTY -> Socket.IO (send terminal output to client)
-ptyProcess.onData(data => {
-    io.emit("terminal:data", data);
-});
-
-
-// Socket.IO -> PTY (write client input into terminal)
 io.on("connection", socket => {
-    console.log("Socket connected:", socket.id);
+  socket.on("fileExplorer:get", (projectname) => {
+    socket.emit("fileExplorer", FileExplorer(projectDir));
+  });
 
-    socket.on("terminal:write", data => {
-        ptyProcess.write(data);
-    });
-
-    // Optional: Resize event (if needed later)
-    // socket.on("terminal:resize", ({ cols, rows }) => {
-    //     ptyProcess.resize(cols, rows);
-    // });
+  socket.on("fileExplorer:getChildren", (dir) => {
+    socket.emit("fileExplorer:children", FileExplorer(dir) );
+  });
 });
 
+const watcher = watchDirectory(projectDir, (change) => {
+  // Broadcast file changes to all connected clients
+  io.emit("fileChange", change);
+});
 
-// Start server
 server.listen(9000, () => {
-    console.log("🐋 Docker server running on port 9000");
+  console.log("Backend running on port 9000");
 });

@@ -18,31 +18,15 @@ import {
     SiNpm,
     SiWebpack,
 } from "react-icons/si";
-import { VscFile, VscFolder, VscFolderOpened } from "react-icons/vsc";
+import { VscFile} from "react-icons/vsc";
 
 interface FileIconProps {
     name: string;
-    isFolder?: boolean;
     isOpen?: boolean;
 }
 
-export const getFileIcon = (name: string, isFolder: boolean, isOpen: boolean) => {
-    if (isFolder) {
-        switch (name) {
-            case "src":
-            case "components":
-            case "hooks":
-            case "utils":
-            case "pages":
-                return isOpen ? <VscFolderOpened className="text-blue-400 text-lg" /> : <VscFolder className="text-blue-400 text-lg" />;
-            case "public":
-                return isOpen ? <VscFolderOpened className="text-green-400 text-lg" /> : <VscFolder className="text-green-400 text-lg" />;
-            case "node_modules":
-                return isOpen ? <VscFolderOpened className="text-green-600 text-lg" /> : <VscFolder className="text-green-600 text-lg" />;
-            default:
-                return isOpen ? <VscFolderOpened className="text-blue-400 text-lg" /> : <VscFolder className="text-blue-400 text-lg" />;
-        }
-    }
+export const getFileIcon = (name: string) => {
+
 
     const lowerName = name.toLowerCase();
 
@@ -86,10 +70,5 @@ export const getFileIcon = (name: string, isFolder: boolean, isOpen: boolean) =>
     }
 };
 
-export const FileIcon: React.FC<FileIconProps> = ({ name, isFolder, isOpen }) => {
-    return (
-        <span className="flex items-center justify-center w-5 h-5">
-            {getFileIcon(name, !!isFolder, !!isOpen)}
-        </span>
-    );
-};
+
+

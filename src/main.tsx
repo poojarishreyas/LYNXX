@@ -6,11 +6,14 @@ import "@vscode/codicons/dist/codicon.css";
 
 
 import { BrowserRouter } from 'react-router-dom'
+import { SocketProvider } from './context/SocketContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <SocketProvider>
+        <App />
+      </SocketProvider>
     </BrowserRouter>
   </StrictMode>,
 )
