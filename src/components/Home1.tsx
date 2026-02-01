@@ -58,7 +58,7 @@ const Home = () => {
                 {isPowered && (
                     <div className="absolute inset-0 bg-[#bd00ff]" />
                 )}
-                <textarea
+                <textarea         
                     ref={inputRef}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}

@@ -6,9 +6,10 @@ import Node from './Node';
 import useMeasure from 'react-use-measure';
 
 
-const FileExplorer = () => {
-  const [tree, setTree] = useState([])
-  const [selectedNode, setSelectedNode] = useState(null);
+
+
+const FileExplorer = ({selectedNode,setSelectedNode}) => {
+  const [tree, setTree] = useState([]);
   const { socket } = useSocket();
   const [ref, bounds] = useMeasure();
 
@@ -25,6 +26,8 @@ const FileExplorer = () => {
       setTree(data);
       console.log("fileExplorer", data);
     });
+
+
 
     //================= watcher =====================
     socket.on("fileChange", (change) => {
@@ -43,8 +46,16 @@ const FileExplorer = () => {
   }, [socket]);
   return (
     <>
+      {/* Header */}
+            <div className="h-15 sticky p-0 bg-[#19191a] border-b border-purple-500/30">
+              <img
+                src="editorlynx.png"
+                alt="Lynx"
+                className="h-14 w-12 p-0"
+              />
+            </div>
       {tree.length > 0 && (
-        <div ref={ref} className="w-full h-full flex flex-col text-purple-200 px-5 ">
+        <div ref={ref} className="w-full h-full flex flex-col text-gray-300 px-5 ">
 
           {/* Header */}
           <div className="relative flex items-center justify-between text-1xl gap-2 px-2 h-10 shrink-0">

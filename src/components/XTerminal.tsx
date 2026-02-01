@@ -6,7 +6,7 @@ import { Resizable } from "re-resizable";
 import { useSocket } from '../context/SocketContext';
 
 const TERMINAL_THEME = {
-    background: "#00000000", // Transparent for glass effect
+    background: "#19191a", // Transparent for glass effect
     foreground: "#e5e7eb",
     cursor: "#e5e7eb",
     selection: "#374151",
@@ -85,7 +85,7 @@ export default function TerminalComponent() {
     };
     return (
         <Resizable
-            className="relatz-20z-20 border-t border-purple-500/30 hover:border-purple-500/80 transition-colors duration-300 bg-black/80 backdrop-blur-md shadow-[0_-5px_30px_rgba(189,0,255,0.15)] flex flex-col"
+            className="relatz-20z-20 border-t border-purple-500/30 hover:border-purple-500/80 transition-colors duration-300 bg-[#19191a] backdrop-blur-md shadow-[0_-5px_30px_rgba(189,0,255,0.15)] flex flex-col"
             defaultSize={{ width: "100%", height: "30%" }}
             minHeight="10%"
             maxHeight="90%"
